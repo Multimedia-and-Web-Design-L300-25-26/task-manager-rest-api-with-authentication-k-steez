@@ -1,5 +1,19 @@
 import request from "supertest";
 import app from "../src/app.js";
+import mongoose from "mongoose";
+import dotenv from "dotenv";
+
+dotenv.config({ path: ".env.test" });
+
+beforeAll(async () => {
+  if (mongoose.connection.readyState === 0) {
+    await mongoose.connect(process.env.MONGO_URI);
+  }
+});
+
+afterAll(async () => {
+  await mongoose.connection.close();
+});
 
 describe("Auth Routes", () => {
 
@@ -32,4 +46,4 @@ describe("Auth Routes", () => {
     token = res.body.token;
   });
 
-});
+});
